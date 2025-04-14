@@ -1,0 +1,10 @@
+streamlit
+pandas
+numpy
+requests
+prophet
+pyod
+scikit-learn
+matplotlib
+seaborn
+pyodbc
