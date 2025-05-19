@@ -41,7 +41,7 @@ st.set_page_config(page_title="Low-Code Analytics POC", layout="wide")
 st.markdown(
     """
     <div style="background-color:#f0f2f6;padding:20px;border-radius:8px;margin-bottom:20px">
-      <h1 style="margin:0; color:#333;">🧠 Low-Code Analytics Platform</h1>
+      <h1 style="margin:0; color:#333;">🧠 Advance Analytics Platform</h1>
       <p style="font-size:1.1em; color:#555;">
         Upload your data, choose the analysis you need—forecasting, anomalies,
         regression, clustering, PCA, causal insights—and get interactive charts,
