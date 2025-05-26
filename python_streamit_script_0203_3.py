@@ -34,7 +34,7 @@ try:
 except ImportError:
     DOWHY = False
 
-st.set_page_config(page_title="Analytics Platform", layout="wide")
+st.set_page_config(page_title="Low-Code Analytics Platform", layout="wide")
 
 
 # ─── 1) Landing / Hero Section ────────────────────────────────────────────────
@@ -266,21 +266,29 @@ elif task == "Anomaly Detection (Advanced)":
 
     st.info("⚠️ Advanced anomaly detection: static IQR, dynamic 5–95%, Isolation Forest & PELT drift")
 
-    # ─── 1) Optional group-by ────────────────────────────────────────────────────
-    cat_cols = df.select_dtypes(include="object").columns.tolist()
-    group_col = st.selectbox("Group by (optional)", ["None"] + cat_cols)
+    # pick up both object & category columns, filter out ultra-high-cardinality
+        # ─── 1) Optional group-by ────────────────────────────────────────────────────
+    # include any column with ≤50 unique values
+    groupable = [c for c in df.columns if df[c].nunique() <= 50]
+    group_col = st.selectbox("Group by (optional)", ["None"] + groupable)
+
     if group_col != "None":
-        chosen = st.multiselect(f"Select {group_col}(s)", df[group_col].dropna().unique().tolist())
+        chosen = st.multiselect(
+            f"Select {group_col}(s)",
+            df[group_col].dropna().astype(str).unique().tolist()
+        )
         if not chosen:
             st.warning("Please pick at least one group or choose 'None'")
             st.stop()
-        df_ad = df[df[group_col].isin(chosen)].copy()
+
+        # **filter** and then **cast that column to string** in the filtered df
+        df_ad = df[df[group_col].astype(str).isin(chosen)].copy()
+        df_ad[group_col] = df_ad[group_col].astype(str)
+
         groups = chosen
     else:
-        df_ad = df.copy()
+        df_ad, group_col, groups = df.copy(), "ALL", ["ALL"]
         df_ad["ALL"] = "ALL"
-        group_col = "ALL"
-        groups = ["ALL"]
 
     # ─── 2) Time & metric selection ───────────────────────────────────────────────
     time_col = st.selectbox("⏰ Time column", df_ad.columns, key="ad_time")
