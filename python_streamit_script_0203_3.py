@@ -570,19 +570,41 @@ elif task == "Anomaly Detection (Advanced)":
         st.pyplot(fig)
         st.markdown("Pairwise correlations—see which metrics co-move.")
 
-    # 8) Final anomaly table + download + alerts
-    st.markdown("---\n### 🧾 All IQR-Flagged Anomaly Rows")
-    df_tmp = df_ad.copy()
-    df_tmp["ds"] = pd.to_datetime(df_tmp[time_col], errors="coerce")
+    # ─── 9) Final anomaly table + download + alerts ───────────────────────────────
+    
+    st.markdown("---\n### 🧾 Aggregated IQR-Flagged Anomalies")
 
-    df_out = df_tmp.merge(
-        all_df.loc[all_df["iqr_out"], ["ds","metric"]],
-        on="ds", how="inner"
-    ).reset_index(drop=True)
+    # 1) Build the aggregated anomalies table (one row per date/group/metric)
+    df_flags = (
+        all_df
+        .loc[all_df["iqr_out"], ["ds", "group", "metric", "y"]]
+        .rename(columns={
+            "ds":     "Date",
+            "group":  group_col,  # e.g. "ALL" or your selected column
+            "metric": "Metric",
+            "y":      "Value"
+        })
+        .sort_values("Date")
+        .reset_index(drop=True)
+    )
 
-    st.dataframe(df_out)
-    download_df(df_out, "all_anomaly_rows.csv")
+    # 2) Show & download the aggregated table
+    st.table(df_flags)
+    download_df(df_flags, "aggregated_iqr_anomalies.csv")
 
+    # ----- ALIGN DATES FOR THE EXPANDER -----
+    # ensure both sides use real datetimes
+    df_flags["Date"]   = pd.to_datetime(df_flags["Date"], errors="coerce")
+    df_ad[time_col]    = pd.to_datetime(df_ad[time_col], errors="coerce")
+
+    # 3) Expander with full raw‐context rows for those anomaly dates
+    with st.expander("🔍 Show raw rows for those anomalous dates"):
+        mask = df_ad[time_col].isin(df_flags["Date"])
+        df_raw = df_ad[mask]
+        st.dataframe(df_raw)
+        download_df(df_raw, "raw_context_for_anomalies.csv")
+
+    # 4) Alerts
     if st.checkbox("📧 Send Outlook Alert"):
         rec = st.text_input("Recipient email")
         if st.button("Send Email"):
@@ -590,7 +612,7 @@ elif task == "Anomaly Detection (Advanced)":
     if st.checkbox("💬 Send Teams Alert"):
         hook = st.text_input("Teams webhook URL")
         if st.button("Send Teams message"):
-            notify_teams(hook, "🚨 Anomalies detected!")
+            notify_teams(hook, "🚨 Anomalies detected!!")
 
 
 
