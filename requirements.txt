@@ -24,5 +24,4 @@ openai>=0.27.0
 
 # (Optional) if you run into missing Azure helpers—
 # azure-ai-openai is not strictly required, but safe to include
-azure-ai-openai>=1.1.0
 
