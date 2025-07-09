@@ -21,6 +21,8 @@ stumpy>=1.11.0
 # LLM / LangChain
 langchain>=0.0.260
 openai>=0.27.0
+langchain-openai==0.3.14
+langchain-experimental==0.3.4
 
 # (Optional) if you run into missing Azure helpers—
 # azure-ai-openai is not strictly required, but safe to include
