@@ -21,7 +21,7 @@ import datetime # Import datetime module if not already imported
 
 # Streamlit, LangChain, and OpenAI imports
 import streamlit as st
-from langchain_openai import AzureChatOpenAI, ChatOpenAI
+from langchain.chat_models import AzureChatOpenAI, ChatOpenAI
 from langchain_experimental.agents import create_csv_agent
 from langchain.agents.agent_types import AgentType
 from langchain_core.messages import AIMessage # Needed to access .content from LLM response
