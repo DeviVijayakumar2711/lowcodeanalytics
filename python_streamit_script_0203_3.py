@@ -194,7 +194,8 @@ def notify_teams(url, text):
 def get_csv_agent(_path: str, _llm_instance):
     return create_csv_agent(
         _llm_instance, _path, verbose=True, agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-        agent_executor_kwargs={"handle_parsing_errors": True}
+        agent_executor_kwargs={"handle_parsing_errors": True},
+        allow_dangerous_code=True, 
     )
 
 # ─── LLM-BASED ANOMALY INSIGHTS GENERATION ────────────────────────────────────
