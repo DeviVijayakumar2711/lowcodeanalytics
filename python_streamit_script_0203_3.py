@@ -249,7 +249,7 @@ def get_llm_anomaly_details(anomaly_row_dict: dict, metric: str, _llm) -> dict:
 # ─── 1) DATA SOURCE & PREVIEW ─────────────────────────────────────────────────
 st.title("Low-Code Analytics Platform")
 BASE_DIR = Path(__file__).resolve().parent
-DEFAULT_CSV = BASE_DIR / "data" / "telematics_trip_new1.csv"
+DEFAULT_CSV = BASE_DIR / "telematics_trip_new2.csv"
 df_orig = None
 if DEFAULT_CSV.exists():
     df_orig = load_csv(str(DEFAULT_CSV))
