@@ -1,29 +1,32 @@
+# Core
 streamlit>=1.24.0
 pandas>=1.5.0
 numpy>=1.23.0
 requests>=2.28.0
+
+# Visualization
 plotly>=5.0.0
-prophet>=1.1.1
+
+# Machine learning & anomaly detection
 scikit-learn>=1.2.0
 pyod>=1.0.6
 ruptures>=1.1.6
-seaborn>=0.12.0
-matplotlib>=3.6.0
-dowhy>=0.7.0        # optional, only if you’re using causal inference
-cmdstanpy>=1.1.0
-graphviz>=0.20.1        # for CausalModel.view_model() (optional)
-
-
-# Anomaly & time-series
 stumpy>=1.11.0
 
-
-# LLM / LangChain
+# LangChain & OpenAI
 langchain>=0.0.260
 openai>=0.27.0
 langchain-openai==0.3.14
 langchain-experimental==0.3.4
+azure-ai-openai>=1.0.0  # optional, for AzureChatOpenAI support
 
-# (Optional) if you run into missing Azure helpers—
-# azure-ai-openai is not strictly required, but safe to include
+# Email/webhooks
+# (smtp is in stdlib; no extra package needed)
 
+# Optional extras—uncomment if you end up using these:
+# prophet>=1.1.1         # time-series forecasting
+# cmdstanpy>=1.1.0       # backend for Prophet
+# seaborn>=0.12.0        # additional plotting
+# matplotlib>=3.6.0      # additional plotting
+# dowhy>=0.7.0           # causal inference
+# graphviz>=0.20.1       # model visualization
