@@ -15,7 +15,7 @@ stumpy>=1.11.0
 
 # LangChain & OpenAI
 langchain>=0.0.260
-openai>=0.27.0
+openai>=1.68.2,<2.0.0
 langchain-openai==0.3.14
 langchain-experimental==0.3.4
 
