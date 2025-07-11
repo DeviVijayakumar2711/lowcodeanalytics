@@ -18,12 +18,8 @@ langchain>=0.0.260
 openai>=0.27.0
 langchain-openai==0.3.14
 langchain-experimental==0.3.4
-azure-ai-openai>=1.0.0  # optional, for AzureChatOpenAI support
 
-# Email/webhooks
-# (smtp is in stdlib; no extra package needed)
-
-# Optional extras—uncomment if you end up using these:
+# Optional—uncomment if you end up using these:
 # prophet>=1.1.1         # time-series forecasting
 # cmdstanpy>=1.1.0       # backend for Prophet
 # seaborn>=0.12.0        # additional plotting
