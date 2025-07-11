@@ -20,12 +20,15 @@ import re # Import regex for parsing LLM output
 import datetime # Import datetime module if not already imported
 
 # Streamlit, LangChain, and OpenAI imports
-import streamlit as st
-from langchain.chat_models import AzureChatOpenAI
-from langchain_experimental.agents import create_csv_agent
-from langchain.agents.agent_types import AgentType
-from langchain_core.messages import AIMessage # Needed to access .content from LLM response
+from langchain.chat_models import AzureChatOpenAI, ChatOpenAI
+try:
+    from langchain_experimental.agents import create_csv_agent
+except ImportError:
+    from langchain.agents import create_csv_agent
+from langchain.schema import AIMessage
+
 # Added for agent configuration in newer Langchain versions
+from langchain.agents.agent_types import AgentType
 from langchain.prompts import PromptTemplate # Needed for custom agent if create_csv_agent is insufficient
 from langchain.agents import AgentExecutor # Explicitly import AgentExecutor
 from langchain.globals import set_verbose, get_verbose
@@ -44,6 +47,8 @@ st.set_page_config(page_title="Analytics Platform", layout="wide")
 
 
 # ─── 0) LLM & Agent Setup ─────────────────────────────────────────────────────
+
+# ─── 0) LLM & Agent Setup ─────────────────────────────────────────────────────
 def get_secret_debug(key, default=None):
     return os.getenv(key, default)
 
@@ -57,8 +62,6 @@ AZURE_API_VERSION = os.getenv("AZURE_API_VERSION", "2024-02-15-preview")
 if not OPENAI_API_KEY:
     st.sidebar.error("OPENAI_API_KEY is missing. Please configure it in App settings.")
     st.stop()
-# …and so on for the other keys…
-
 
 llm = None # Global LLM instance for direct calls
 if (AZURE_ENDPOINT is not None and isinstance(AZURE_ENDPOINT, str) and
@@ -163,9 +166,8 @@ def download_df(df, filename):
 
 def notify_email(subject, message, to):
     host, port = "smtp.office365.com", 587
-    frm = os.getenv("EMAIL")
-    pwd = os.getenv("EMAIL_PASSWORD")
-    #teams_webhook = os.getenv("TEAMS_WEBHOOK")
+    frm = os.getenv("EMAIL", "")
+    pwd = os.getenv("EMAIL_PASSWORD", "")
 
     msg = MIMEText(message)
     msg["Subject"], msg["From"], msg["To"] = subject, frm, to
@@ -1312,8 +1314,8 @@ elif section == "Table & Alerts":
         st.dataframe(anomaly_df)
 
         st.subheader("Send Alert")
-        recipient_email = st.text_input("Recipient Email", value=st.secrets.get("EMAIL", ""))
-        teams_webhook = st.text_input("Teams Webhook URL (optional)", value=st.secrets.get("TEAMS_WEBHOOK", ""))
+        recipient_email = st.text_input("Recipient Email", value=os.getenv("EMAIL", ""))
+        teams_webhook = st.text_input("Teams Webhook URL (optional)", value=os.getenv("TEAMS_WEBHOOK", ""))
 
         if st.button("Send Alert"):
             if not recipient_email:
